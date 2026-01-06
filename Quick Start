@@ -1,0 +1,172 @@
+Quick Start
+
+```typescript
+import { GitDigitalCheckoutCore } from 'gitdigital-checkout-core';
+
+// Initialize the checkout core
+const checkout = new GitDigitalCheckoutCore({
+  webhookConfig: {
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  },
+  retryConfig: {
+    maxAttempts: 3,
+    initialDelay: 1000,
+  },
+});
+
+// Listen to events
+checkout.events.on('payment:captured', (data) => {
+  console.log('Payment captured:', data);
+});
+
+checkout.events.on('subscription:created', (data) => {
+  console.log('Subscription created:', data);
+});
+
+// Process a payment
+const paymentIntent = await checkout.payments.createPaymentIntent({
+  amount: 1000, // $10.00
+  currency: 'usd',
+  customerId: 'cust_123',
+  provider: 'stripe',
+});
+
+// Create a subscription
+const subscription = await checkout.subscriptions.createSubscription({
+  customerId: 'cust_123',
+  planId: 'plan_monthly_pro',
+  billingCycle: 'monthly',
+});
+
+// Handle webhooks
+app.post('/webhooks/stripe', async (req, res) => {
+  await checkout.webhooks.processWebhook({
+    provider: 'stripe',
+    payload: req.body,
+    signature: req.headers['stripe-signature'],
+    headers: req.headers,
+  });
+  res.status(200).send('Webhook received');
+});
+```
+
+Event System
+
+The core emits events for all operations. Here are the main event categories:
+
+Payment Events
+
+· payment:intent:created - Payment intent created
+· payment:captured - Payment successfully captured
+· payment:refunded - Payment refund processed
+· payment:failed - Payment failed
+
+Subscription Events
+
+· subscription:created - New subscription created
+· subscription:updated - Subscription updated
+· subscription:cancelled - Subscription cancelled
+· subscription:recurring:payment:completed - Recurring payment processed
+
+Webhook Events
+
+· webhook:received - Webhook received from provider
+· webhook:processed - Webhook successfully processed
+· webhook:verification:failed - Webhook signature verification failed
+
+Retry Events
+
+· retry:attempt - Retry attempt started
+· retry:success - Operation succeeded after retry
+· retry:exhausted - All retry attempts exhausted
+
+Configuration
+
+Environment Variables
+
+```bash
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+PAYPAL_CLIENT_ID=...
+PAYPAL_CLIENT_SECRET=...
+REDIS_URL=redis://localhost:6379
+```
+
+Retry Strategies
+
+· exponential: Delay doubles with each attempt
+· linear: Delay increases linearly
+· fixed: Constant delay between attempts
+
+API Reference
+
+PaymentService
+
+· createPaymentIntent() - Create a new payment intent
+· capturePayment() - Capture a payment
+· refundPayment() - Refund a payment
+· getPaymentMethods() - Get customer's payment methods
+
+SubscriptionService
+
+· createSubscription() - Create new subscription
+· updateSubscription() - Update existing subscription
+· cancelSubscription() - Cancel subscription
+· handleRecurringPayment() - Process recurring payment
+
+WebhookHandler
+
+· processWebhook() - Process incoming webhook
+· Supports: Stripe, PayPal, custom providers
+
+RetryService
+
+· executeWithRetry() - Execute operation with retry logic
+· queueForRetry() - Queue operation for later retry
+· processRetryQueue() - Process queued retry operations
+
+Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+
+# Run specific test file
+npm test -- payments.test.ts
+```
+
+License
+
+MIT
+
+```
+
+### 12. .env.example
+
+```env
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+
+# PayPal Configuration
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+PAYPAL_ENVIRONMENT=sandbox
+
+# Redis Configuration (for retry queue)
+REDIS_URL=redis://localhost:6379
+REDIS_PASSWORD=your_redis_password
+
+# Application Configuration
+NODE_ENV=development
+PORT=3000
+LOG_LEVEL=info
+
+# Retry Configuration
+MAX_RETRY_ATTEMPTS=3
+INITIAL_RETRY_DELAY=1000
+MAX_RETRY_DELAY=60000
