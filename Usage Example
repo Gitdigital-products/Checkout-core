@@ -1,0 +1,82 @@
+// Example usage in an Express app
+import express from 'express';
+import { GitDigitalCheckoutCore } from './src/index';
+
+const app = express();
+app.use(express.json());
+
+const checkout = new GitDigitalCheckoutCore({
+  webhookConfig: {
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  },
+});
+
+// Listen to all events
+checkout.events.on('**', (event, data) => {
+  console.log(`[${event}]`, data);
+});
+
+// Webhook endpoint
+app.post('/webhooks/stripe', async (req, res) => {
+  try {
+    await checkout.webhooks.processWebhook({
+      provider: 'stripe',
+      payload: req.body,
+      signature: req.headers['stripe-signature'] as string,
+      headers: req.headers as Record<string, string>,
+    });
+    res.status(200).send('Webhook received');
+  } catch (error) {
+    res.status(400).send(`Webhook error: ${error.message}`);
+  }
+});
+
+// Create payment endpoint
+app.post('/payments/create', async (req, res) => {
+  try {
+    const paymentIntent = await checkout.payments.createPaymentIntent({
+      amount: req.body.amount,
+      currency: req.body.currency,
+      customerId: req.body.customerId,
+      provider: 'stripe',
+      metadata: req.body.metadata,
+    });
+    
+    res.json({
+      success: true,
+      clientSecret: paymentIntent.clientSecret,
+      paymentIntentId: paymentIntent.id,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+// Create subscription endpoint
+app.post('/subscriptions/create', async (req, res) => {
+  try {
+    const subscription = await checkout.subscriptions.createSubscription({
+      customerId: req.body.customerId,
+      planId: req.body.planId,
+      billingCycle: req.body.billingCycle,
+      metadata: req.body.metadata,
+    });
+    
+    res.json({
+      success: true,
+      subscription,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Checkout core server running on port 3000');
+});
