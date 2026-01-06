@@ -1,0 +1,51 @@
+gitdigital-checkout-core/
+├── src/
+│   ├── index.ts
+│   ├── core/
+│   │   ├── event-emitter.ts
+│   │   ├── config.ts
+│   │   └── types.ts
+│   ├── payments/
+│   │   ├── payment-processor.ts
+│   │   ├── payment-events.ts
+│   │   ├── payment-service.ts
+│   │   └── types.ts
+│   ├── subscriptions/
+│   │   ├── subscription-service.ts
+│   │   ├── subscription-events.ts
+│   │   ├── subscription-manager.ts
+│   │   └── types.ts
+│   ├── webhooks/
+│   │   ├── webhook-handler.ts
+│   │   ├── webhook-events.ts
+│   │   ├── webhook-service.ts
+│   │   └── types.ts
+│   ├── retry/
+│   │   ├── retry-queue.ts
+│   │   ├── retry-strategies.ts
+│   │   ├── retry-service.ts
+│   │   └── types.ts
+│   ├── providers/
+│   │   ├── stripe/
+│   │   │   ├── stripe-provider.ts
+│   │   │   └── types.ts
+│   │   ├── paypal/
+│   │   │   ├── paypal-provider.ts
+│   │   │   └── types.ts
+│   │   └── base-provider.ts
+│   └── utils/
+│       ├── logger.ts
+│       ├── validation.ts
+│       └── helpers.ts
+├── tests/
+│   ├── unit/
+│   │   ├── payments.test.ts
+│   │   ├── subscriptions.test.ts
+│   │   └── webhooks.test.ts
+│   └── integration/
+│       └── event-flow.test.ts
+├── package.json
+├── tsconfig.json
+├── .env.example
+├── .gitignore
+└── README.md
