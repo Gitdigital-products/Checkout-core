@@ -1,0 +1,39 @@
+{
+  "name": "gitdigital-checkout-core",
+  "version": "1.0.0",
+  "description": "Event-driven payments, subscriptions, and webhooks core system",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "keywords": ["payments", "subscriptions", "webhooks", "events", "checkout"],
+  "author": "GitDigital",
+  "license": "MIT",
+  "dependencies": {
+    "eventemitter2": "^6.4.9",
+    "stripe": "^14.0.0",
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "axios": "^1.5.0",
+    "joi": "^17.9.2",
+    "bull": "^4.11.5",
+    "ioredis": "^5.3.2",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "@types/jest": "^29.5.4",
+    "typescript": "^5.2.2",
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1",
+    "eslint": "^8.48.0",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "prettier": "^3.0.3"
+  }
+}
