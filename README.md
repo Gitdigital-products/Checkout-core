@@ -1,5 +1,5 @@
 
-```markdown
+
 <!-- Security Badges -->
 ![Security Foundational](https://img.shields.io/badge/security-foundational-blue)
 
@@ -9,7 +9,7 @@
 <!-- Technology Badges -->
 ![License](https://img.shields.io/badge/license-MIT-yellow)
 ```
-```markdown
+```
 <!-- Security Badges -->
 ![Security Foundational](https://img.shields.io/badge/security-foundational-blue)
 ![Security Scanning](https://img.shields.io/badge/security-scanning-inactive-red)
@@ -30,6 +30,7 @@
 
 
 **Core Badge Verification Workflow** (`.github/workflows/badge-verification.yml`):
+
 ```yaml
 name: Badge Verification
 
@@ -72,7 +73,6 @@ jobs:
 ```
 
 
-```markdown
 <!-- Security Badges -->
 ![Security Foundational](https://img.shields.io/badge/security-foundational-blue)
 
@@ -83,8 +83,7 @@ jobs:
 ![License](https://img.shields.io/badge/license-MIT-yellow)
 ```
 
-
-```markdown
+```
 <!-- Security Badges -->
 ![Security Foundational](https://img.shields.io/badge/security-foundational-blue)
 ![Security Scanning](https://img.shields.io/badge/security-scanning-active-green)
